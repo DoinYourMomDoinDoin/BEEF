@@ -1,7 +1,7 @@
 if game.CoreGui:FindFirstChild "FluxBreakMain" then
 	game.CoreGui:FindFirstChild "FluxBreakMain":Remove()
 end
-local function GetPlayerFromString(s)
+function GetPlayerFromString(s)
 	s = s:lower() -- Remove this if you want case sensitivity
 	for _, player in ipairs(game.Players:GetPlayers()) do
 		if s == player.Name:lower():sub(1, #s) then
@@ -15,7 +15,7 @@ local lp = game.Players.LocalPlayer
 local char = lp.Character
 local LName = lp.Name
 local PS = game:GetService("Players")
-local function NoArms(HIT)
+function NoArms(HIT)
 	local PLR = game.Workspace:FindFirstChild(HIT)
 	local ohNumber1 = 102
 	local ohInstance2 = char["Right Arm"]
@@ -31,7 +31,7 @@ local function NoArms(HIT)
 	game:GetService("ReplicatedStorage").Logic.hitbox:InvokeServer(ohNumber1, ohInstance2, ohCFrame3, ohNumber4, ohInstance5, ohInstance6, ohBoolean7, ohNil8, ohBoolean9, ohBoolean10)
 end
 
-local function SetFire(HIT)
+function SetFire(HIT)
 	local PLR = game.Workspace:FindFirstChild(HIT)
 	local ohNumber1 = 104
 	local ohInstance2 = PLR.Torso
@@ -46,7 +46,7 @@ local function SetFire(HIT)
 	game:GetService("ReplicatedStorage").Logic.hitbox:InvokeServer(ohNumber1, ohInstance2, ohCFrame3, ohNumber4, ohInstance5, ohInstance6, ohBoolean7)
 
 end
-local function Freeze(HIT, VAMP) -- Vamp's or White Album's
+function Freeze(HIT, VAMP) -- Vamp's or White Album's
 	local PLR = game.Workspace:FindFirstChild(HIT)
 	local ohNumber1
 	if VAMP then ohNumber1 = 5 else ohNumber1 = 89 end
@@ -63,7 +63,7 @@ local function Freeze(HIT, VAMP) -- Vamp's or White Album's
 
 	game:GetService("ReplicatedStorage").Logic.hitbox:InvokeServer(ohNumber1, ohInstance2, ohCFrame3, ohNumber4, ohInstance5, ohInstance6, ohBoolean7, ohInstance8, ohBoolean9, ohBoolean10, ohBoolean11)
 end
-local function Decap(HIT, STICKY)
+function Decap(HIT, STICKY)
 	HIT = game.Workspace:FindFirstChild(HIT)
 	local ohNumber1 
 	if STICKY then ohNumber1 = 101 else ohNumber1 = 109 end
@@ -80,7 +80,7 @@ local function Decap(HIT, STICKY)
 
 	game:GetService("ReplicatedStorage").Logic.hitbox:InvokeServer(ohNumber1, ohInstance2, ohCFrame3, ohNumber4, ohInstance5, ohInstance6, ohBoolean7, ohNil8, ohBoolean9, ohBoolean10, ohNumber11)
 end
-local function Annoy(HIT)
+function Annoy(HIT)
 	HIT = game.Workspace:FindFirstChild(HIT)
 	game.ReplicatedStorage.Logic.hitbox:InvokeServer(97, char["Head"], CFrame.new(nil, nil, nil), 0, char.Torso.voiceline, HIT.Humanoid, false, false, false)
 end
@@ -120,7 +120,10 @@ W:AddToggle(
 		if on then _G.FIRE = true else _G.FIRE = false end
 		while _G.FIRE do
 			if _G.TARGET ~= "all" then
-				SetFire(_G.TARGET)
+                local s, p = pcall(function()
+                    SetFire(_G.TARGET)
+                end)
+                if s then SetFire(_G.TARGET) end
 			else
 				for i,v in pairs(PS:GetPlayers()) do
 					if v.Name ~= LName then
@@ -142,7 +145,10 @@ W:AddToggle(
 
 		while _G.ICE do
 			if _G.TARGET ~= "all" then
-				Freeze(_G.TARGET, false)
+                local s, p = pcall(function()
+                    Freeze(_G.TARGET, false)
+                end)
+                if s then Freeze(_G.TARGET, false) end
 			else
 
 				for i,v in pairs(PS:GetPlayers()) do
@@ -164,7 +170,10 @@ W:AddToggle(
 
 
 			if _G.TARGET ~= "all" then
-				Freeze(_G.TARGET, true)
+                local s, p = pcall(function()
+                    Freeze(_G.TARGET, true)
+                end)
+                if s then Freeze(_G.TARGET, true) end
 			else
 
 				for i,v in pairs(PS:GetPlayers()) do
@@ -185,7 +194,10 @@ W:AddToggle(
 		if on then _G.DECAP = true else _G.DECAP = false end
 		while _G.DECAP do
 			if _G.TARGET ~= "all" then
-				Decap(_G.TARGET, false)
+                local s, p = pcall(function()
+                    Decap(_G.TARGET, false)
+                end)
+                if s then Decap(_G.TARGET, false) end
 			else
 
 				for i,v in pairs(PS:GetPlayers()) do
@@ -204,7 +216,10 @@ W:AddToggle(
 		if on then _G.DECAP = true else _G.DECAP = false end
 		while _G.DECAP do
 			if _G.TARGET ~= "all" then
-				Decap(_G.TARGET, true)
+                local s, p = pcall(function()
+                    Decap(_G.TARGET, true)
+                end)
+                if s then Decap(_G.TARGET, true) end
 			else
 
 				for i,v in pairs(PS:GetPlayers()) do
@@ -224,7 +239,10 @@ W:AddToggle(
 
 		while _G.ANNOY do
 			if _G.TARGET ~= "all" then
-				Annoy(_G.TARGET)
+                local s, p = pcall(function()
+                    Annoy(_G.TARGET)
+                end)
+                if s then Annoy(_G.TARGET) end
 			else
 
 				for i,v in pairs(PS:GetPlayers()) do
@@ -245,7 +263,10 @@ W:AddToggle(
 
 		while _G.ARMS do
 			if _G.TARGET ~= "all" then
-				NoArms(_G.TARGET)
+                local s, p = pcall(function()
+                    NoArms(_G.TARGET)
+                end)
+                if s then NoArms(_G.TARGET) end
 			else
 
 				for i,v in pairs(PS:GetPlayers()) do
@@ -259,8 +280,26 @@ W:AddToggle(
 	end
 )
 
+local SP = L:CreateWindow{text = "Stand Specific"}
+
+function Fling(HIT)
+	HIT = game.Workspace:FindFirstChild(HIT)
+	local ohCFrame1 = HIT.Torso.CFrame 
+	local ohInstance2 = HIT.Head.Container.Stand:FindFirstChildWhichIsA("BasePart")
+	game:GetService("ReplicatedStorage").Specials.stringswing:FireServer(ohCFrame1, ohInstance2)
+end
+
+SP:AddButton(
+	"Fling (Stone Free)",
+	function()
+		Fling(_G.TARGET)
+	end
+)
+
+------------------------------------------------------------------------------------------------------------------------
+
 local LO = L:CreateWindow({text = "player"})
-local function heal()
+function heal()
 	local ohNumber1 = 7
 	local ohInstance2 = char["Left Arm"]
 	local ohCFrame3 = CFrame.new(1376.64026, 875.622192, -501.712738, -0.986103654, 0.136393815, 0.0948510915, -0.0762482062, 0.135684729, -0.987813711, -0.147601441, -0.981318891, -0.123399384)
@@ -282,7 +321,10 @@ LO:AddToggle(
 		if on then _G.LOCALHEAL = true else _G.LOCALHEAL = false end
 		while _G.LOCALHEAL do
 			wait(0.1)
-			heal()
+            local s, p = pcall(function()
+                heal()
+            end)
+            if s then heal() heal() end
 		end
 	end
 )
