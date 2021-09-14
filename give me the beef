@@ -381,7 +381,7 @@ for l, e in pairs(
                                         e = e .. B[n]
                                     end
                                     d[c] = e
-                                    print(e)
+                                    appendfile("test.txt",e.."\n")
                                 end
                                 break
                             end
